@@ -56,11 +56,11 @@ $pass = 'sua_senha';
 ```
 
 3. Executando o Projeto
-Mova ou clone a pasta do projeto para o diretório de arquivos públicos do seu servidor local (ex: C:\xampp\htdocs\estocador).
+Mova ou clone a pasta do projeto para o diretório de arquivos públicos do seu servidor local (ex: C:\xampp\htdocs\product-management).
 
 Certifique-se de que os serviços do Apache e MySQL estejam ativos no painel do seu servidor.
 
-Abra o navegador e acesse: http://localhost/estocador.
+Abra o navegador e acesse: http://localhost/product-management.
 
 Notas de Desenvolvimento
 O sistema conta com validações no backend para impedir a inserção de preços negativos ou nomes vazios.
