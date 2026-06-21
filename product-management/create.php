@@ -11,19 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = isset($_POST['description']) ? trim($_POST['description']) : '';
     $price = isset($_POST['price']) ? trim($_POST['price']) : '';
 
-    // Validation
+    // Validação
     if ($name === '') {
-        $errors['name'] = 'Product name is required.';
+        $errors['name'] = 'O nome do produto é obrigatório.';
     } elseif (strlen($name) > 255) {
-        $errors['name'] = 'Product name cannot exceed 255 characters.';
+        $errors['name'] = 'O nome do produto não pode exceder 255 caracteres.';
     }
 
     if ($price === '') {
-        $errors['price'] = 'Price is required.';
+        $errors['price'] = 'O preço é obrigatório.';
     } elseif (!is_numeric($price)) {
-        $errors['price'] = 'Price must be a valid number.';
+        $errors['price'] = 'O preço deve ser un número válido.';
     } elseif (floatval($price) < 0) {
-        $errors['price'] = 'Price cannot be negative.';
+        $errors['price'] = 'O preço não pode ser negativo.';
     }
 
     if (empty($errors)) {
@@ -37,17 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: index.php?status=created");
             exit;
         } catch (\PDOException $e) {
-            $errors['global'] = 'Database error: ' . $e->getMessage();
+            $errors['global'] = 'Erro no banco de dados: ' . $e->getMessage();
         }
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Product</title>
+    <title>Adicionar Novo Produto</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -55,11 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <div class="container navbar">
             <a href="index.php" class="logo">
-                Antigravity <span>Catalog</span>
+                Estocador <span>Catálogo</span>
             </a>
             <div class="nav-links">
                 <a href="index.php" class="btn btn-secondary">
-                    View Catalog
+                    Ver Catálogo
                 </a>
             </div>
         </div>
@@ -71,9 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>
                     <a href="index.php" class="back-link">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                        Back to Inventory
+                        Voltar ao Inventário
                     </a>
-                    <h1 class="page-title" style="margin-top: 10px;">Add New Product</h1>
+                    <h1 class="page-title" style="margin-top: 10px;">Adicionar Novo Produto</h1>
                 </div>
             </div>
 
@@ -87,41 +87,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form action="create.php" method="POST">
                 
                 <div class="form-group">
-                    <label for="name">Product Name *</label>
-                    <input type="text" id="name" name="name" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" placeholder="e.g. Ergonomic Gaming Chair" value="<?= htmlspecialchars($name) ?>" required>
+                    <label for="name">Nome do Produto *</label>
+                    <input type="text" id="name" name="name" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" placeholder="ex: Cadeira Gamer Ergonômica" value="<?= htmlspecialchars($name) ?>" required>
                     <?php if (isset($errors['name'])): ?>
                         <div style="color: #fb7185; font-size: 0.85rem; margin-top: 6px;"><?= $errors['name'] ?></div>
                     <?php endif; ?>
                 </div>
 
                 <div class="form-group">
-                    <label for="price">Price ($ USD) *</label>
-                    <input type="number" id="price" name="price" step="0.01" min="0" class="form-control <?= isset($errors['price']) ? 'is-invalid' : '' ?>" placeholder="e.g. 199.99" value="<?= htmlspecialchars($price) ?>" required>
+                    <label for="price">Preço (R$ BRL) *</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" class="form-control <?= isset($errors['price']) ? 'is-invalid' : '' ?>" placeholder="ex: 199,99" value="<?= htmlspecialchars($price) ?>" required>
                     <?php if (isset($errors['price'])): ?>
                         <div style="color: #fb7185; font-size: 0.85rem; margin-top: 6px;"><?= $errors['price'] ?></div>
                     <?php endif; ?>
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Provide a detailed description of the product..."><?= htmlspecialchars($description) ?></textarea>
+                    <label for="description">Descrição</label>
+                    <textarea id="description" name="description" class="form-control" placeholder="Forneça uma descrição detalhada do produto..."><?= htmlspecialchars($description) ?></textarea>
                 </div>
 
                 <div class="form-actions">
-                    <a href="index.php" class="btn btn-secondary">Cancel</a>
+                    <a href="index.php" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Create Product
+                        Criar Produto
                     </button>
                 </div>
 
             </form>
         </div>
     </main>
-
-    <footer class="container">
-        <p>&copy; <?= date('Y') ?> Antigravity Product Management Catalog. All rights reserved.</p>
-    </footer>
-
 </body>
 </html>

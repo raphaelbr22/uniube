@@ -18,6 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Redirect back if not a valid POST request
+// Redireciona de volta se não for uma requisição POST válida
 header("Location: index.php");
 exit;

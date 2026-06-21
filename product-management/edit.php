@@ -8,19 +8,19 @@ if ($id <= 0) {
     exit;
 }
 
-// Fetch the existing product details
+// Busca os detalhes do produto existente
 try {
     $stmt = $pdo->prepare("SELECT * FROM products WHERE id = :id");
     $stmt->execute(['id' => $id]);
     $product = $stmt->fetch();
 
     if (!$product) {
-        // Product not found
+        // Produto não encontrado
         header("Location: index.php?status=error");
         exit;
     }
 } catch (\PDOException $e) {
-    die("Database error: " . htmlspecialchars($e->getMessage()));
+    die("Erro no banco de dados: " . htmlspecialchars($e->getMessage()));
 }
 
 $errors = [];
@@ -33,19 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = isset($_POST['description']) ? trim($_POST['description']) : '';
     $price = isset($_POST['price']) ? trim($_POST['price']) : '';
 
-    // Validation
+    // Validação
     if ($name === '') {
-        $errors['name'] = 'Product name is required.';
+        $errors['name'] = 'Necessário digitar nome para o produto.';
     } elseif (strlen($name) > 255) {
-        $errors['name'] = 'Product name cannot exceed 255 characters.';
+        $errors['name'] = 'Nome do produto deve ter menos de 255 caracteres.';
     }
 
     if ($price === '') {
-        $errors['price'] = 'Price is required.';
+        $errors['price'] = 'Necessário atribuir um preço.';
     } elseif (!is_numeric($price)) {
-        $errors['price'] = 'Price must be a valid number.';
+        $errors['price'] = 'O preço deve ser um valor numérico.';
     } elseif (floatval($price) < 0) {
-        $errors['price'] = 'Price cannot be negative.';
+        $errors['price'] = 'O preço não pode ser um valor negativo.';
     }
 
     if (empty($errors)) {
@@ -60,17 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: index.php?status=updated");
             exit;
         } catch (\PDOException $e) {
-            $errors['global'] = 'Database error: ' . $e->getMessage();
+            $errors['global'] = 'Erro no banco de dados: ' . $e->getMessage();
         }
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product - #<?= htmlspecialchars($product['id']) ?></title>
+    <title>Editar Produto - #<?= htmlspecialchars($product['id']) ?></title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -78,11 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <div class="container navbar">
             <a href="index.php" class="logo">
-                Antigravity <span>Catalog</span>
+                Estocador <span>Catálogo</span>
             </a>
             <div class="nav-links">
                 <a href="index.php" class="btn btn-secondary">
-                    View Catalog
+                    Ver Catálogo
                 </a>
             </div>
         </div>
@@ -94,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div>
                     <a href="index.php" class="back-link">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                        Back to Inventory
+                        Retornar ao Catálogo
                     </a>
-                    <h1 class="page-title" style="margin-top: 10px;">Edit Product #<?= htmlspecialchars($product['id']) ?></h1>
+                    <h1 class="page-title" style="margin-top: 10px;">Editar Produto #<?= htmlspecialchars($product['id']) ?></h1>
                 </div>
             </div>
 
@@ -110,41 +110,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form action="edit.php?id=<?= $product['id'] ?>" method="POST">
                 
                 <div class="form-group">
-                    <label for="name">Product Name *</label>
-                    <input type="text" id="name" name="name" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" placeholder="e.g. Ergonomic Gaming Chair" value="<?= htmlspecialchars($name) ?>" required>
+                    <label for="name">Nome do Produto *</label>
+                    <input type="text" id="name" name="name" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" placeholder="ex: Cadeira Gamer Ergonômica" value="<?= htmlspecialchars($name) ?>" required>
                     <?php if (isset($errors['name'])): ?>
                         <div style="color: #fb7185; font-size: 0.85rem; margin-top: 6px;"><?= $errors['name'] ?></div>
                     <?php endif; ?>
                 </div>
 
                 <div class="form-group">
-                    <label for="price">Price ($ USD) *</label>
-                    <input type="number" id="price" name="price" step="0.01" min="0" class="form-control <?= isset($errors['price']) ? 'is-invalid' : '' ?>" placeholder="e.g. 199.99" value="<?= htmlspecialchars($price) ?>" required>
+                    <label for="price">Preço (R$ BRL) *</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" class="form-control <?= isset($errors['price']) ? 'is-invalid' : '' ?>" placeholder="ex: 199,99" value="<?= htmlspecialchars($price) ?>" required>
                     <?php if (isset($errors['price'])): ?>
                         <div style="color: #fb7185; font-size: 0.85rem; margin-top: 6px;"><?= $errors['price'] ?></div>
                     <?php endif; ?>
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" class="form-control" placeholder="Provide a detailed description of the product..."><?= htmlspecialchars($description) ?></textarea>
+                    <label for="description">Descrição</label>
+                    <textarea id="description" name="description" class="form-control" placeholder="Forneça uma descrição detalhada do produto..."><?= htmlspecialchars($description) ?></textarea>
                 </div>
 
                 <div class="form-actions">
-                    <a href="index.php" class="btn btn-secondary">Cancel</a>
+                    <a href="index.php" class="btn btn-secondary">Cancelar</a>
                     <button type="submit" class="btn btn-primary">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                        Save Changes
+                        Salvar Alterações
                     </button>
                 </div>
 
             </form>
         </div>
     </main>
-
-    <footer class="container">
-        <p>&copy; <?= date('Y') ?> Antigravity Product Management Catalog. All rights reserved.</p>
-    </footer>
-
 </body>
 </html>
